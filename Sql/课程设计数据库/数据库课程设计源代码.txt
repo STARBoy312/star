@@ -1,0 +1,186 @@
+
+-- 创建作者表
+CREATE TABLE 作者 (
+    作者ID INT PRIMARY KEY,
+    姓名 VARCHAR(100),
+    电子邮件 VARCHAR(100) CHECK (电子邮件 LIKE '%_@__%.__%')
+);
+
+-- 创建审稿人表
+CREATE TABLE 审稿人 (
+    审稿人ID INT PRIMARY KEY,
+    姓名 VARCHAR(100),
+    电子邮件 VARCHAR(100) CHECK (电子邮件 LIKE '%_@__%.__%')
+);
+
+-- 创建稿件类型表
+CREATE TABLE 稿件类型 (
+    稿件类型ID INT PRIMARY KEY,
+    类型名称 VARCHAR(50)
+);
+
+-- 创建稿件信息表
+CREATE TABLE 稿件信息 (
+    稿件ID INT PRIMARY KEY,
+    标题 VARCHAR(100),
+    稿件类型ID INT,
+    作者ID INT,
+    状态 VARCHAR(50),
+    FOREIGN KEY (稿件类型ID) REFERENCES 稿件类型(稿件类型ID),
+    FOREIGN KEY (作者ID) REFERENCES 作者(作者ID)
+);
+
+-- 创建审阅过程管理表
+CREATE TABLE 审阅过程 (
+    过程ID INT PRIMARY KEY,
+    稿件ID INT, -- 修改外键列名
+    审稿人ID INT,
+    状态 VARCHAR(50),
+    FOREIGN KEY (稿件ID) REFERENCES 稿件信息(稿件ID),
+    FOREIGN KEY (审稿人ID) REFERENCES 审稿人(审稿人ID)
+);
+
+-- 创建费用管理表
+CREATE TABLE 费用 (
+    费用ID INT PRIMARY KEY,
+    稿件ID INT,
+    审稿费 DECIMAL(10, 2),
+    编辑费 DECIMAL(10, 2),
+    版面费 DECIMAL(10, 2),
+    已收费 TINYINT DEFAULT 0,
+    FOREIGN KEY (稿件ID) REFERENCES 稿件信息(稿件ID)
+);
+
+-- 插入作者信息
+INSERT INTO 作者 (作者ID, 姓名, 电子邮件) VALUES
+(1, '作者1', 'author1@example.com'),
+(2, '作者2', 'author2@example.com'),
+(3, '作者3', 'author3@example.com'),
+(4, '作者4', 'author4@example.com'),
+(5, '作者5', 'author5@example.com');
+
+-- 插入审稿人信息
+INSERT INTO 审稿人 (审稿人ID, 姓名, 电子邮件) VALUES
+(1, '审稿人1', 'reviewer1@example.com'),
+(2, '审稿人2', 'reviewer2@example.com'),
+(3, '审稿人3', 'reviewer3@example.com'),
+(4, '审稿人4', 'reviewer4@example.com'),
+(5, '审稿人5', 'reviewer5@example.com');
+
+-- 插入稿件类型信息
+INSERT INTO 稿件类型 (稿件类型ID, 类型名称) VALUES
+(1, '类型1'),
+(2, '类型2'),
+(3, '类型3'),
+(4, '类型4'),
+(5, '类型5');
+
+-- 插入稿件信息
+INSERT INTO 稿件信息 (稿件ID, 标题, 稿件类型ID, 作者ID, 状态) VALUES
+(1, '标题1', 1, 1, '已提交'),
+(2, '标题2', 2, 2, '审核中'),
+(3, '标题3', 3, 3, '已接受'),
+(4, '标题4', 4, 4, '已拒绝'),
+(5, '标题5', 5, 5, '已发表');
+
+-- 插入审阅过程信息
+INSERT INTO 审阅过程 (过程ID, 稿件ID, 审稿人ID, 状态) VALUES
+(1, 1, 1, '审阅中'),
+(2, 2, 2, '已完成'),
+(3, 3, 3, '审阅中'),
+(4, 4, 4, '已完成'),
+(5, 5, 5, '审阅中');
+
+-- 插入费用信息
+INSERT INTO 费用 (费用ID, 稿件ID, 审稿费, 编辑费, 版面费, 已收费) VALUES
+(1, 1, 50.00, 20.00, 30.00, 1),
+(2, 2, 60.00, 25.00, 40.00, 0),
+(3, 3, 70.00, 30.00, 50.00, 1),
+(4, 4, 80.00, 35.00, 60.00, 0),
+(5, 5, 90.00, 40.00, 70.00, 1);
+
+select *from 费用;
+select *from 稿件类型;
+select *from 稿件信息;
+select *from 审稿人;
+select *from 审阅过程;
+select *from 作者;
+
+-- 创建存储过程，统计指定作者的稿件信息
+CREATE PROCEDURE 获取作者稿件信息
+    @作者ID INT
+AS
+BEGIN
+    SELECT * FROM 稿件信息 WHERE 作者ID = @作者ID;
+END;
+
+--获取存储过程是否合理
+EXEC 获取作者稿件信息 @作者ID = 1;
+
+
+
+
+-- 创建触发器，当收到审稿费时自动修改审稿费收到标记为“是”
+CREATE TRIGGER 更新已收费标记
+ON 费用
+AFTER UPDATE
+AS
+BEGIN
+    IF UPDATE(审稿费) AND EXISTS (SELECT 1 FROM inserted WHERE inserted.审稿费 > 0)
+    BEGIN
+        UPDATE 费用 SET 已收费 = 1 FROM 费用 INNER JOIN inserted ON 费用.费用ID = inserted.费用ID;
+    END
+END;
+
+--检测触发器是否可行
+UPDATE 费用 SET	审稿费 = 50 WHERE 费用ID = 1;
+SELECT *FROM 费用 WHERE 费用ID = 1;
+
+
+
+
+-- 创建规则，使得作者的 E-Mail 必须满足电子邮件的基本格式
+CREATE RULE 检查作者邮箱规则
+AS
+    @电子邮件 NOT LIKE '%_@__%.__%'
+GO
+
+-- 将规则绑定到作者表的电子邮件列
+EXEC sp_bindrule '检查作者邮箱规则', '作者.电子邮件';
+
+-- 试图插入不符合规则的数据
+INSERT INTO 作者 (作者ID, 姓名, 电子邮件) VALUES (6, '作者6', 'invalid_email');
+
+
+
+
+
+
+
+-- 建立数据库相关表之间的参照完整性约束
+ALTER TABLE 稿件信息 ADD CONSTRAINT FK_稿件信息_稿件类型
+    FOREIGN KEY (稿件类型ID) REFERENCES 稿件类型(稿件类型ID);
+
+ALTER TABLE 稿件信息 ADD CONSTRAINT FK_稿件信息_作者
+    FOREIGN KEY (作者ID) REFERENCES 作者(作者ID);
+
+ALTER TABLE 审阅过程 ADD CONSTRAINT FK_审阅过程_稿件信息
+    FOREIGN KEY (稿件ID) REFERENCES 稿件信息(稿件ID);
+
+ALTER TABLE 审阅过程 ADD CONSTRAINT FK_审阅过程_审稿人
+    FOREIGN KEY (审稿人ID) REFERENCES 审稿人(审稿人ID);
+
+ALTER TABLE 费用 ADD CONSTRAINT FK_费用_稿件信息
+    FOREIGN KEY (稿件ID) REFERENCES 稿件信息(稿件ID);
+
+-- 查询稿件信息，同时查看相关的稿件类型和作者信息
+SELECT * FROM 稿件信息 AS M
+JOIN 稿件类型 AS T ON M.稿件类型ID = T.稿件类型ID
+JOIN 作者 AS A ON M.作者ID = A.作者ID;
+
+SELECT * FROM 稿件信息;
+SELECT * FROM 稿件类型;
+SELECT * FROM 作者;
+SELECT * FROM 审阅过程;
+SELECT * FROM 审稿人;
+SELECT * FROM 费用;

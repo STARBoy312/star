@@ -1,0 +1,7 @@
+﻿  FileName.cpp
+D:\大二code\数据结构\Stack\Stack\FileName.cpp(2,7): error C2065: “namesapce”: 未声明的标识符
+D:\大二code\数据结构\Stack\Stack\FileName.cpp(2,7): error C2187: 语法错误: 此处出现意外的“namesapce”
+D:\大二code\数据结构\Stack\Stack\FileName.cpp(2,20): error C4430: 缺少类型说明符 - 假定为 int。注意: C++ 不支持默认 int
+D:\大二code\数据结构\Stack\Stack\FileName.cpp(2,17): error C2365: “std”: 重定义；以前的定义是“命名空间”
+D:\vs2022\VC\Tools\MSVC\14.36.32532\include\iostream(19,1): message : 参见“std”的声明
+D:\大二code\数据结构\Stack\Stack\FileName.cpp(5,2): error C2065: “cout”: 未声明的标识符

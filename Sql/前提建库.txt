@@ -1,0 +1,23 @@
+create database 数据库名字
+on primary 
+(
+  name = `stu`,
+  filename = `D:/asdf.mdf`,
+  size = `10MB`,
+  maxsize = `50MB`,
+  filegrowth = `25%`,
+)
+log on
+(
+  name = `stu`,
+  filename = `D:/asdf.ldf`,
+  size = `10MB`,
+  maxsize = `50MB`,
+  filegrowth = `25%`,
+)
+
+
+
+create table 
+
+INSERT  INTO 厂商 VALUE(3,'阿斯蒂芬','阿斯蒂芬','1234','撒地方');
