@@ -1,0 +1,47 @@
+#include <stdio.h>
+
+typedef int RedType;  // 假设记录的数据类型为整数
+
+typedef struct {
+    RedType r[100];  // 假设顺序表的最大长度为100
+    int length;       // 顺序表的长度
+} SqList;
+
+int SelectMinKey(SqList L, int i) {
+    int minIndex = i;
+    for (int j = i + 1; j <= L.length; j++) {
+        if (L.r[j] < L.r[minIndex]) {
+            minIndex = j;
+        }
+    }
+    return minIndex;
+}
+
+void SelectSort(SqList *L) {
+    int i, j;
+    RedType temp;
+    for (i = 1; i < L->length; ++i) {
+        j = SelectMinKey(*L, i);
+        if (i != j) {
+            temp = L->r[i];
+            L->r[i] = L->r[j];
+            L->r[j] = temp;
+        }
+    }
+}
+
+int main() {
+    SqList list;
+    printf("输入元素的个数: ");
+    scanf("%d", &list.length);  // 从用户输入中获取数组的长度
+    printf("输入元素: ");
+    for (int i = 1; i <= list.length; i++) {
+        scanf("%d", &list.r[i]);  // 从用户输入中获取数组元素
+    }
+    SelectSort(&list);  // 调用SelectSort函数对顺序表进行排序
+    printf("排序后的数组: \n");
+    for (int i = 1; i <= list.length; i++) {
+        printf("%d ", list.r[i]);
+    }
+    return 0;
+}

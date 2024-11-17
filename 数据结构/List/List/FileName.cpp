@@ -434,8 +434,55 @@ int main() {
 	}
 	*/
 	
+	/*循环链表的插入*/
+
+	//typedef int ElemType;
+	//typedef struct _ListNode
+	//{
+	//	int data;
+	//	struct _ListNode* next;		//指向结点的指针
+	//}; ListNode;
+
+	//typedef ListNode* CycleList;  //定义循环链表的头指针
 
 
+
+	//CycleList ListInit()	//创建一个头结点，让指针指向自己，并返回头结点地址
+	//{
+	//	CycleList list = (CycleList)malloc(sizeof(ListNode));
+	//	list->next = list;
+	//	list->data = -1;
+	//	return list;
+	//}
+
+	//int ListInsert(CycleList list, int data, int n)	//将node插入到第n个位置
+	//{
+	//	if (list == NULL || n < 1)
+	//	{
+	//		return 404;
+	//	}
+	//	ListNode* cur = list; //用cur指向当前结点，初始化指向头结点
+	//	int cur_i = 0;
+	//	while (cur->next != list && cur_i < (n - 1))
+	//	{
+	//		cur = cur->next;
+	//		cur_i++;
+	//	}
+	//	if (cur->next == list)	//移动到最后的结点
+	//	{
+	//		if (cur_i != (n - 1))//仍然不是插入位置前一个结点，出错
+	//		{
+	//			return -1;
+	//		}
+	//	}
+
+	//	ListNode* new = (ListNode*)malloc(sizeof(ListNode));
+	//	new->data = data;
+	//	new->next = cur->next;
+	//	cur->next = new;
+	//	return 0;
+
+	//}
 
 	return 0;
 }   

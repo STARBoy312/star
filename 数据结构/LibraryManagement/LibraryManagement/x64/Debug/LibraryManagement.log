@@ -1,0 +1,7 @@
+﻿  源.cpp
+D:\Col2_code\数据结构\LibraryManagement\LibraryManagement\源.cpp(40,26): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\Col2_code\数据结构\LibraryManagement\LibraryManagement\源.cpp(41,26): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\Col2_code\数据结构\LibraryManagement\LibraryManagement\源.cpp(42,26): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\Col2_code\数据结构\LibraryManagement\LibraryManagement\源.cpp(43,26): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\Col2_code\数据结构\LibraryManagement\LibraryManagement\源.cpp(44,26): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+  LibraryManagement.vcxproj -> D:\Col2_code\数据结构\LibraryManagement\x64\Debug\LibraryManagement.exe
